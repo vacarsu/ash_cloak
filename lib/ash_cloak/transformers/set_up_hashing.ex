@@ -12,7 +12,7 @@ defmodule AshCloak.Transformers.SetupHashing do
     module = Spark.Dsl.Transformer.get_persisted(dsl, :module)
     hashed_attrs = AshCloak.Info.cloak_hashed_attributes!(dsl)
     encrypted_attrs = AshCloak.Info.cloak_encrypted_attributes!(dsl)
-    all = hashed_attrs ++ hashed_attrs
+    all = hashed_attrs ++ encrypted_attrs
 
     if Enum.empty?(Enum.uniq(all)) do
       raise Spark.Error.DslError,

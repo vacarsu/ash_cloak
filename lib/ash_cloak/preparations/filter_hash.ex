@@ -8,7 +8,7 @@ defmodule AshCloak.Preparations.FilterHashed do
 
   def init(opts), do: {:ok, opts}
 
-  def prepare(query, _, ctx) when query.action.name in [:read, :update, :destroy] do
+  def prepare(query, _, _) when query.action.name in [:read, :update, :destroy] do
     Ash.Query.before_action(query, fn query ->
       hashed_attrs = AshCloak.Info.cloak_hashed_attributes!(query.resource)
 
@@ -50,8 +50,7 @@ defmodule AshCloak.Preparations.FilterHashed do
 
   defp do_rebuild_operator(
          %Operator.Eq{
-           left: value,
-           right: %Ash.Query.Ref{relationship_path: [], attribute: %{name: name}} = left
+           left: value
          } = op
        )
        when is_binary(value) do
@@ -60,7 +59,6 @@ defmodule AshCloak.Preparations.FilterHashed do
 
   defp do_rebuild_operator(
          %Operator.Eq{
-           left: %Ash.Query.Ref{relationship_path: [], attribute: %{name: name}},
            right: value
          } = op
        )
@@ -70,8 +68,7 @@ defmodule AshCloak.Preparations.FilterHashed do
 
   defp do_rebuild_operator(
          %Operator.NotEq{
-           left: value,
-           right: %Ash.Query.Ref{relationship_path: [], attribute: %{name: name}}
+           left: value
          } = op
        )
        when is_binary(value) do
@@ -80,7 +77,6 @@ defmodule AshCloak.Preparations.FilterHashed do
 
   defp do_rebuild_operator(
          %Operator.NotEq{
-           left: %Ash.Query.Ref{relationship_path: [], attribute: %{name: :hashed}},
            right: value
          } = op
        )
