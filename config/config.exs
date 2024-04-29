@@ -4,6 +4,10 @@ config :ash, :disable_async?, true
 config :ash, :validate_domain_resource_inclusion?, false
 config :ash, :validate_domain_config_inclusion?, false
 
+config :ash_cloak, :hmac,
+  algorithm: :sha512,
+  secret: "test"
+
 if Mix.env() == :dev do
   config :git_ops,
     mix_project: AshCloak.MixProject,

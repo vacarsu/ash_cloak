@@ -6,6 +6,7 @@ defmodule AshCloak do
   """
 
   @transformers [
+    AshCloak.Transformers.SetupHashing,
     AshCloak.Transformers.SetupEncryption
   ]
 
@@ -18,7 +19,13 @@ defmodule AshCloak do
         doc: "The vault to use to encrypt & decrypt the value",
         required: true
       ],
-      attributes: [
+      encrypted_attributes: [
+        type: {:wrap_list, :atom},
+        default: [],
+        doc:
+          "The attribute or attributes to encrypt. The attribute will be renamed to `encrypted_{attribute}`, and a calculation with the same name will be added."
+      ],
+      hashed_attributes: [
         type: {:wrap_list, :atom},
         default: [],
         doc:

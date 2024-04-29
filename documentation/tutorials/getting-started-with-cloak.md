@@ -12,6 +12,14 @@ def deps do
 end
 ```
 
+If using hashed values, you will also need to add the following to your config.
+
+```elixir
+config :ash_cloak, :hmac,
+  algorithm: :sha512,
+  secret: "your_secret_here"
+```
+
 Follow [the cloak getting started guide](https://hexdocs.pm/cloak/readme.html).
 
 Technically, you just need a module that implements `encrypt!` and `decrypt!`, but we recommend using `Cloak` to achieve that goal.
@@ -26,7 +34,9 @@ defmodule User do
     # the vault to use to encrypt them
     vault MyApp.Vault
     # the attributes to encrypt
-    attributes [:address, :phone_number]
+    encrypted_attributes [:address, :phone_number]
+    # the attributes to hash
+    hashed_attributes [:email]
     # This is just equivalent to always providing `load: fields` on all calls
     decrypt_by_default [:address]
     # An MFA or function to be invoked beforce any decryption

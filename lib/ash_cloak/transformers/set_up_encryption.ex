@@ -5,23 +5,23 @@ defmodule AshCloak.Transformers.SetupEncryption do
   # sobelow_skip ["DOS.BinToAtom", "DOS.StringToAtom"]
   def transform(dsl) do
     module = Spark.Dsl.Transformer.get_persisted(dsl, :module)
-    cloaked_attrs = AshCloak.Info.cloak_attributes!(dsl)
+    encrypted_attributes = AshCloak.Info.cloak_encrypted_attributes!(dsl)
 
-    Enum.reduce_while(cloaked_attrs, {:ok, dsl}, fn attr, {:ok, dsl} ->
+    Enum.reduce_while(encrypted_attributes, {:ok, dsl}, fn attr, {:ok, dsl} ->
       attribute = Ash.Resource.Info.attribute(dsl, attr)
 
       if !attribute do
         raise Spark.Error.DslError,
           module: module,
           message: "No attribute called #{inspect(attribute)} found",
-          path: [:cloak, :attributes]
+          path: [:cloak, :encrypted_attributes]
       end
 
       if attribute.primary_key? do
         raise Spark.Error.DslError,
           module: module,
           message: "cannot encrypt primary key attribute",
-          path: [:cloak, :attributes]
+          path: [:cloak, :encrypted_attributes]
       end
 
       name = attribute.name

@@ -10,14 +10,15 @@ defmodule AshCloak.Test.Resource do
     private?(true)
   end
 
-  @attributes [:encrypted, :encrypted_always_loaded, :not_encrypted]
+  @attributes [:encrypted, :hashed, :encrypted_always_loaded, :not_encrypted]
   actions do
     defaults([:read, :destroy, create: @attributes, update: @attributes])
   end
 
   cloak do
     vault(AshCloak.Test.Vault)
-    attributes([:encrypted, :encrypted_always_loaded])
+    encrypted_attributes([:encrypted, :encrypted_always_loaded])
+    hashed_attributes([:hashed])
     decrypt_by_default([:encrypted_always_loaded])
 
     on_decrypt(fn resource, records, field, context ->
@@ -35,6 +36,7 @@ defmodule AshCloak.Test.Resource do
     uuid_primary_key(:id)
     attribute(:not_encrypted, :string)
     attribute(:encrypted, :integer, public?: true)
+    attribute(:hashed, :string, public?: true)
     attribute(:encrypted_always_loaded, :map, public?: true)
   end
 end
